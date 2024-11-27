@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PBAA db: Plant Data</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+            --accent-color: #27ae60;
+            --background-color: #ecf0f1;
+            --text-color: #2c3e50;
+            --table-hover: #f8f9fa;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        nav {
+            background-color: var(--primary-color);
+            padding: 15px 5%;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+
+        nav div {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        nav a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: white;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .filter-section {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .filter-section input {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            width: 200px;
+        }
+
+        .filter-section button {
+            padding: 10px 20px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+
+        .filter-section button:hover {
+            background-color: #2ecc71;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background-color: white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        thead {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        th {
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+        }
+
+        tbody tr:hover {
+            background-color: var(--table-hover);
+        }
+
+        .view-button {
+            color: var(--accent-color);
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            transition: color 0.3s ease;
+        }
+
+        .view-button:hover {
+            color: #2ecc71;
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            nav div {
+                flex-direction: column;
+                align-items: center;
+            }
+            .filter-section {
+                flex-direction: column;
+                align-items: center;
+            }
+            .filter-section input {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            table {
+                font-size: 0.9rem;
+            }
+            th, td {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div>
+            <a href="#">PBAA db</a>
+            <a href="{% url 'main_page' %}">Home</a>
+            <a href="{% url 'plant_page' %}">Plants</a>
+            <a href="#">Compounds</a>
+            <a href="#">Microorganisms</a>
+            <a href="#">Download</a>
+            <a href="#">Contact Us</a>
+        </div>
+    </nav>
+
+<div class="container">
+    <h1>Plant Data Table</h1>
+
+    <!-- Filter Section -->
+    <div class="filter-section">
+        <form method="GET" action="">
+            <input type="text" name="common_name" placeholder="Common Name" value="{{ common_name }}">
+            <input type="text" name="scientific_name" placeholder="Scientific Name" value="{{ scientific_name }}">
+            <input type="text" name="microorganism_name" placeholder="Microorganism" value="{{ microorganism_name }}">
+            <button type="submit">Filter Data</button>
+        </form>
+    </div>
+
+    <!-- Data Table -->
+    <table>
+        <thead>
+            <tr>
+                <th>Common Name</th>
+                <th>Scientific Name</th>
+                <th>Microorganism</th>
+                <th>Records</th>
+                <th>Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in data %}
+                <tr>
+                    <td>{{ item.plant__common_name }}</td>
+                    <td>{{ item.plant__scientific_name }}</td>
+                    <td>{{ item.micro__name }}</td>
+                    <td>{{ item.record_count }}</td>
+                    <td><a href="{% url 'plant_view_page' item.plant__id item.micro__id %}">View</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
